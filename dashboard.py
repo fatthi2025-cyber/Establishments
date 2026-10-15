@@ -73,8 +73,12 @@ COLS = ["group", "key", "cat_ar", "cat_en", "reg_ar", "reg_en",
 
 
 def find_data_file() -> Path:
-    if len(sys.argv) > 1:
-        return Path(sys.argv[1])
+    # نتجاهل أي argument جاي من gunicorn أو غيره
+    if len(sys.argv) > 1 and not sys.argv[1].startswith("dashboard"):
+        candidate = Path(sys.argv[1])
+        if candidate.exists():
+            return candidate
+
     here = Path(__file__).resolve().parent
     candidates = (
         here / "Book6.10.xlsx",
